@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noetik</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        #main-iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+            display: block;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: Arial, sans-serif;
+            color: #666;
+            z-index: 1000;
+        }
+        
+        .loading.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">Loading...</div>
+    <iframe 
+        id="main-iframe"
+        src="https://noetik.xyz/" 
+        frameborder="0"
+        allowfullscreen
+        sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation">
+    </iframe>
+
+    <script>
+        const iframe = document.getElementById('main-iframe');
+        const loading = document.getElementById('loading');
+        
+        // Hide loading indicator when iframe loads
+        iframe.addEventListener('load', function() {
+            loading.classList.add('hidden');
+        });
+        
+        // Handle potential loading errors
+        iframe.addEventListener('error', function() {
+            loading.textContent = 'Failed to load content';
+        });
+        
+        // Optional: Try to sync the title with the iframe content
+        // Note: This may not work due to cross-origin restrictions
+        iframe.addEventListener('load', function() {
+            try {
+                if (iframe.contentDocument && iframe.contentDocument.title) {
+                    document.title = iframe.contentDocument.title;
+                }
+            } catch (e) {
+                // Cross-origin restriction - title sync not possible
+                console.log('Cannot sync title due to cross-origin restrictions');
+            }
+        });
+    </script>
+</body>
+</html>
